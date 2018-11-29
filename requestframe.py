@@ -6,6 +6,7 @@ class RequestFrame:
 		self.body_mutate = float(args.body_mutate_level) / 10
 		self.request_mutate = float(args.request_mutate_level) / 10
 		self.body_type = args.body_type
+		self.num_headers = args.num_headers
 		self.all_headers = headerwrapper.HeaderWrapper().get_headers()
 		self.request = ""
 
@@ -29,7 +30,11 @@ class RequestFrame:
 	def generate_headers(self, params):
 		headers = list()
 		unused = range(len(self.all_headers))
-		for i in range(random.randint(0, len(self.all_headers))):
+		if self.num_headers == -1 or self.num_headers > len(self.all_headers):
+			self.num_headers = len(self.all_headers)
+		if self.num_headers == 0:
+			return headers
+		for i in range(random.randint(0, self.num_headers - 1)):
 			index = random.randint(0, len(unused) - 1)
 			headers.append(self.all_headers[unused[index]](params=params))
 			unused = unused[:index] + unused[index + 1:]
